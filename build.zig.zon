@@ -1,0 +1,14 @@
+.{
+    .name = "libmdbx",
+    .version = "0.11.6",
+    .dependencies = .{
+        .libmdbx = .{
+            .path = "../../work/binding/libmdbx",
+        },
+    },
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+        "src",
+    },
+}
