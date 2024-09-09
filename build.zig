@@ -55,6 +55,22 @@ fn buildLibMdbxStatic(b: *Build, target: std.Build.ResolvedTarget, optimize: std
     });
 
     libmdbx_a.addIncludePath(libmdbx_dep.path("src"));
+
+    const build_version = b.addConfigHeader(.{
+        .style = .{ .cmake = libmdbx_dep.path("src/version.c.in") },
+        .include_path = "src/version.c",
+    }, .{
+        .MDBX_VERSION_MAJOR = 0,
+        .MDBX_VERSION_MINOR = 11,
+        .MDBX_VERSION_RELEASE = "0.11.6",
+        .MDBX_VERSION_REVISION = "0.11.6",
+        .MDBX_GIT_TIMESTAMP = "",
+        .MDBX_GIT_TREE = "",
+        .MDBX_GIT_COMMIT = "",
+        .MDBX_GIT_DESCRIBE = "",
+    });
+    libmdbx_a.addCSourceFile(.{ .file = build_version.getOutput() });
+
     libmdbx_a.addCSourceFiles(.{
         .root = libmdbx_dep.path("."),
         .files = &.{
@@ -95,14 +111,6 @@ fn buildLibMdbxStatic(b: *Build, target: std.Build.ResolvedTarget, optimize: std
             },
         });
     }
-
-    const build_version = b.addConfigHeader(.{
-        .style = .{ .cmake = libmdbx_dep.path("src/version.c.in") },
-        .include_path = "src/version.c",
-    }, .{
-        .GIT_MOD = 1,
-    });
-    libmdbx_a.addCSourceFile(.{ .file = build_version.getOutput() });
 
     b.installArtifact(libmdbx_a);
 
